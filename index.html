@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pher Wallpaper Gallery</title>
+
+<!-- Font Awesome for Instagram icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  :root{
+    --bg:#121212;
+    --surface:#171717;
+    --card:#1c1c1c;
+    --accent:#ff2e7e;
+    --muted:#9aa4b2;
+    --gap:18px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;background:var(--bg);color:#fff;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  header{
+    background:linear-gradient(180deg,#151515,#0f0f0f);
+    padding:18px 16px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    font-weight:700;
+    letter-spacing:0.6px;
+  }
+  header .brand{display:flex;align-items:center;gap:10px}
+  .insta{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04)}
+  .insta .fa-instagram{color:var(--accent)}
+  .container{max-width:1200px;margin:22px auto;padding:0 18px}
+  .top {display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+  .title {font-size:20px;font-weight:700}
+  .subtitle{color:var(--muted);font-size:13px}
+  .search {flex:1;min-width:240px;text-align:right}
+  .search input{width:100%;max-width:420px;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:#0b0b0b;color:#fff;outline:none}
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:var(--gap);
+  }
+
+  /* responsive */
+  @media (max-width:1100px){ .gallery{grid-template-columns:repeat(3,1fr)} }
+  @media (max-width:820px){ .gallery{grid-template-columns:repeat(2,1fr)} .search{text-align:center} }
+  @media (max-width:480px){ .gallery{grid-template-columns:repeat(1,1fr)} }
+
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.06));
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 8px 24px rgba(2,6,23,0.6);
+    transform:translateZ(0);
+    opacity:0;
+    animation:fadeIn .42s ease forwards;
+  }
+  @keyframes fadeIn{to{opacity:1;}}
+  .thumb-wrap{position:relative;overflow:hidden;height:260px;background:#0b0b0b}
+  .thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+  .card:hover .thumb-wrap img{transform:scale(1.08)}
+  .meta{padding:12px 12px 18px 12px;text-align:center}
+  .meta h4{margin:0 0 10px 0;font-size:14px}
+  .meta p{margin:0;color:var(--muted);font-size:12px}
+  .actions{display:flex;gap:10px;justify-content:center;margin-top:10px}
+  .btn{
+    padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);
+    background:linear-gradient(90deg,#111,#0a0a0a);color:#fff;font-weight:700;cursor:pointer;
+  }
+  .btn.download{background:linear-gradient(90deg,var(--accent),#ff6aa3);color:#05060a;border:none}
+  .footer{margin:28px 0 48px 0;text-align:center;color:var(--muted);font-size:13px}
+  .small-note{font-size:12px;color:var(--muted);margin-top:6px;text-align:center}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <a class="insta" href="https://www.instagram.com/pher_lyng" target="_blank" rel="noopener">
+      <i class="fab fa-instagram"></i>
+      <span>@Pher.Pro</span>
+    </a>
+  </div>
+</header>
+
+<main class="container">
+  <div class="top">
+    <div>
+      <div class="title">Pher Wallpaper Gallery</div>
+      <div class="subtitle">Beautiful wallpapers — click <em>Download from Pher</em> to save.</div>
+    </div>
+    <div class="search">
+      <input id="searchInput" placeholder="Search wallpapers (e.g. Wallpaper 1)..." />
+    </div>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+
+  <div class="small-note">If a direct download is blocked by the host, the button will open the image in the same tab for manual save.</div>
+  <div class="footer">© 2025 @Pher.Pro — All rights reserved.</div>
+</main>
+
+<script>
+/* ---------- all user-provided wallpaper URLs (as given) ---------- */
+const images = [
+"https://i.postimg.cc/L6BPn2w4/067c1e2e563019768c7c6ca8abc68ebf.jpg",
+"https://i.postimg.cc/3JMjkLR3/07fe79e101e7af4a3f07df3388f929f2.jpg",
+"https://i.postimg.cc/jjjPpm8n/13c09a6e2a06a6a7d83cd94e0858c9a3.jpg",
+"https://i.postimg.cc/XJzG6vrL/198215-1080x2280-mobile-hd-kitten-background-image.jpg",
+"https://i.postimg.cc/HLfn6hFc/21295fefc9c7fc37b819511cfb7275e9.jpg",
+"https://i.postimg.cc/prBdXXrW/721.jpg",
+"https://i.postimg.cc/j2T5bJsM/96-i-Phone-wallpaper-quotes-with-beautiful-images-89.jpg",
+"https://i.postimg.cc/W4tqWr3Y/9b3a9c48203b7886bd5638fe5f7c2cea.jpg",
+"https://i.postimg.cc/hv0GPPvh/a06b565b6bbe8b17de0a7d79129a475a.jpg",
+"https://i.postimg.cc/RFktnFvs/acca9ca424bad86c6ea065d538989ea1.jpg",
+"https://i.postimg.cc/CKMsFzK8/andrew-garfield-spider-man-1220-x-2160-prhmdb8esegqp0wl.jpg",
+"https://i.postimg.cc/xddMwhsb/android-wallpapers-pink-flower-phone-04-11-2024-1730710251-hd-wallpaper.jpg",
+"https://i.postimg.cc/CLYBy95V/anime-assassin-black-background-with-mask-1221994-32273.avif",
+"https://i.postimg.cc/wM1N1NKs/ankur-chaudhary-2P-asam-Xeo-unsplash.jpg",
+"https://i.postimg.cc/8P8d7y5N/b6ac2e45ec7a32673243b34c3bb931d0.jpg",
+"https://i.postimg.cc/wv75mZLB/ba49552a6534383ebf917b2c2db108e2.jpg",
+"https://i.postimg.cc/BnkVbTd8/boris-baldinger-e-UFf-Y6cwj-SU-unsplash.jpg",
+"https://i.postimg.cc/25q3FDcG/c5b83eafa630e9836080368d7d4e1367.jpg",
+"https://i.postimg.cc/x8GXJ3xT/catholic-phone-0bsp92bygwk1rkbe.jpg",
+"https://i.postimg.cc/C1PDMNQJ/claudia-fernandez-ortiz-TF1qn-G9e-ZHQ-unsplash.jpg",
+"https://i.postimg.cc/kgmypj3z/desktop-wallpaper-goal-on-twitter-joao-felix-2022.jpg",
+"https://i.postimg.cc/PfvzrGdP/desktop-wallpaper-lockscreen-andrew-garfield-spider-man-andrew-garfield.jpg",
+"https://i.postimg.cc/GtR2CscS/desktop-wallpaper-sad-love-sad.jpg",
+"https://i.postimg.cc/TPHgf0SQ/f1ea749342c96f3fcd38de034548c46e.jpg",
+"https://i.postimg.cc/J44r58tG/geike-verniers-g-B6VQRzgess-unsplash.jpg",
+"https://i.postimg.cc/R0bK4d8R/geike-verniers-g-B6VQRzgess-unsplash.jpg",
+"https://i.postimg.cc/ydcdtTzW/HD-wallpaper-felix-atlitco-madrid-falex-joao-felix-portugal-sports-thumbnail.jpg",
+"https://i.postimg.cc/cCcJ44Cr/HD-wallpaper-love-breakup-leave.jpg",
+"https://i.postimg.cc/VkmjRdnH/HD-wallpaper-orange-sunset-could.jpg",
+"https://i.postimg.cc/SRbXxvGM/HD-wallpaper-pink-flower-cool-nice.jpg",
+"https://i.postimg.cc/MGXfPRTr/i-Phone-Wallpaper-Quotes.jpg",
+"https://i.postimg.cc/wx5MkF2d/images-1.jpg",
+"https://i.postimg.cc/QxXtY5Y8/images-10.jpg",
+"https://i.postimg.cc/qBcqGQLQ/images-11.jpg",
+"https://i.postimg.cc/8PtC25xL/images-12.jpg",
+"https://i.postimg.cc/XNKqgx8D/images-13.jpg",
+"https://i.postimg.cc/wT6v4J4g/images-14.jpg",
+"https://i.postimg.cc/CMC54J7d/images-15.jpg",
+"https://i.postimg.cc/7P1hNXVt/images-16.jpg",
+"https://i.postimg.cc/VLY6ZMZn/images-17.jpg",
+"https://i.postimg.cc/Kc7j5Qfj/images-18.jpg",
+"https://i.postimg.cc/L6NscXGL/images-19.jpg",
+"https://i.postimg.cc/qMkRDnDx/images-2.jpg",
+"https://i.postimg.cc/DyBz9ZR6/images-20.jpg",
+"https://i.postimg.cc/jdZjp5BZ/images-3.jpg",
+"https://i.postimg.cc/tC2gKT83/images-4.jpg",
+"https://i.postimg.cc/1R0XKMB1/images-5.jpg",
+"https://i.postimg.cc/y6hxTnPw/images-6.jpg",
+"https://i.postimg.cc/Y2N0x83b/images-7.jpg",
+"https://i.postimg.cc/C54KLL58/images-8.jpg",
+"https://i.postimg.cc/wT6v4J4c/images-9.jpg",
+"https://i.postimg.cc/XqBZj0FF/jai-shankar-chirivella-sx7-Ah-Py7u4-unsplash.jpg",
+"https://i.postimg.cc/FHNjZ73V/sad-2048X3452-wallpaper-shh8ivggw8lcy825.jpg",
+"https://i.postimg.cc/6qZdHZHt/thumb-1920-885315.jpg",
+"https://i.postimg.cc/nL7phcwh/tom-barrett-hg-Gpl-X3PFBg-unsplash.jpg",
+"https://i.postimg.cc/QCZBdyq0/work-hard-6fjqzwln4m9oef1q.jpg",
+"https://i.postimg.cc/PfCKppQy/wp14510602.jpg",
+"https://i.postimg.cc/sgrJNndw/wp6942301.jpg"
+];
+
+/* render gallery */
+const gallery = document.getElementById('gallery');
+
+images.forEach((url, i) => {
+  const idx = i + 1;
+  const card = document.createElement('article');
+  card.className = 'card';
+  card.dataset.title = `Wallpaper ${idx}`;
+  card.innerHTML = `
+    <div class="thumb-wrap">
+      <img loading="lazy" src="${url}" alt="Wallpaper ${idx}" onerror="this.style.opacity=.35">
+    </div>
+    <div class="meta">
+      <h4>Wallpaper ${idx}</h4>
+      <p>${url.split('/').pop()}</p>
+      <div class="actions">
+        <button class="btn download" data-url="${url}" data-name="Pher_Wallpaper_${idx}.jpg">Download from Pher</button>
+        <button class="btn preview" data-url="${url}">Preview</button>
+      </div>
+    </div>
+  `;
+  gallery.appendChild(card);
+});
+
+/* download via fetch -> blob -> single-tab save */
+async function fetchAndSave(url, filename) {
+  try {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Network response not ok');
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(blobUrl);
+  } catch (err) {
+    // fallback: open the image in same tab so user can Save As
+    console.warn('Download blocked — opening image in same tab', err);
+    window.location.href = url;
+  }
+}
+
+/* delegate button clicks */
+document.addEventListener('click', (e) => {
+  const dl = e.target.closest('.download');
+  if (dl) {
+    const url = dl.dataset.url;
+    const name = dl.dataset.name;
+    e.preventDefault();
+    fetchAndSave(url, name);
+    return;
+  }
+  const pv = e.target.closest('.preview');
+  if (pv) {
+    const url = pv.dataset.url;
+    // simple in-page preview: replace location hash to open a lightbox-like overlay
+    openPreview(url);
+    return;
+  }
+});
+
+/* search */
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim().toLowerCase();
+  document.querySelectorAll('.card').forEach(card => {
+    const title = card.dataset.title.toLowerCase();
+    card.style.display = title.includes(q) ? '' : 'none';
+  });
+});
+
+/* lightweight preview overlay */
+const previewOverlay = document.createElement('div');
+previewOverlay.style.cssText = `
+  position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+  background:rgba(2,6,23,0.85);z-index:9999;padding:20px;
+`;
+const previewImg = document.createElement('img');
+previewImg.style.cssText = 'max-width:100%;max-height:90vh;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,0.7)';
+previewOverlay.appendChild(previewImg);
+previewOverlay.addEventListener('click', () => previewOverlay.style.display = 'none');
+document.body.appendChild(previewOverlay);
+
+function openPreview(url) {
+  previewImg.src = url;
+  previewOverlay.style.display = 'flex';
+}
+</script>
+</body>
+</html>
